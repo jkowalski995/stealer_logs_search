@@ -1,0 +1,7 @@
+# List of required packages/tools
+
+awk
+unrar
+unzip
+find
+rg

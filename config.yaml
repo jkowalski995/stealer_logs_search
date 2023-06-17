@@ -1,0 +1,7 @@
+dir1: /path/to/archive # location of the archive file and for tmp dir
+dir2: /path/to/unpacked # location of uncpacked files
+dir3: /path/to/rg/results # location for results of search
+
+phrases: # add as many as want
+  - phrase1
+  - phrase2
