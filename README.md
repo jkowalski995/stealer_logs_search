@@ -1,4 +1,4 @@
-# stealer_logs_search
+# Searching in stealer logs files for passwords and logins
 
 This is an initial version of Bash script for searching phrases in Stealer logs files e.g. Vidar, Racoon.
 
