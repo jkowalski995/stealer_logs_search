@@ -12,8 +12,11 @@ To run the script execute `./scrypt.sh`
 Required tools/packages are in `requirements.txt`
 
 # How it works?
-1. Unpack zip/rar into directory
+1. Unpack zip/rar into directory with use of provided passwords (if archive is not protected with password it will still be unpacked)
 2. Scan for files extensions
 3. Create additional YAML file with detected extensions (exclude *.txt).
 4. Move unneccesary extensions into tmp dir
 5. rg for phrases in unpacked location and save results into provided directory (each phrase has own *.txt file)
+
+# Info
+I know that this script is not perfect and has some bugs (e.g. attempting to extract more than once), but for now it is working perfectly for me.
