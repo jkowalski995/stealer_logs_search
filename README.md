@@ -5,7 +5,7 @@ This is an initial version of Bash script for searching phrases in Stealer logs 
 # Config
 To run application edit `config.yaml` and provide required paths (3).
 
-`scrypt.sh` must have xw permissions so before run execute `chmod +xw scrypt.sh`
+`scrypt.sh` must have -rwxrwxrwx permissions so before run execute `chmod +<missing_permissions> scrypt.sh`
 
 To run the script execute `./scrypt.sh`
 

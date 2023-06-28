@@ -5,8 +5,16 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 NC='\033[0m' # No color
+#!/bin/bash
+#!/bin/bash
 
-echo -e "${RED} THis message is only a informational reminder that to work properly script needs xw permissions. So if any error occurs firstly execute chmod +xw scrypt.sh${NC}"
+# Color codes definition
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+NC='\033[0m' # No color
+
+echo -e "${RED}This message is only an informational reminder that to work properly, the script needs proper permissions. So if any error occurs, first execute 'chmod +<missing_permissions> script.sh'${NC}"
 
 # Load configuration from YAML file
 CONFIG_FILE="config.yaml"
@@ -17,12 +25,27 @@ PHRASES=$(awk '/phrases:/ {flag=1; next} /- phrase:/ {flag=0} flag {print}' "$CO
 
 echo -e "${GREEN}Config loaded${NC}"
 
+# Load passwords list
+PASSWORDS_FILE="passwords.yaml"
+PASSWORDS=$(awk '/passwords:/ {flag=1; next} /- / {print}' "$PASSWORDS_FILE")
+
+echo -e "${GREEN}Passwords loaded${NC}"
+
 # Unpack archive from dir1 to dir2
 mkdir -p "$DIR2"
-unrar x "$DIR1"/*.rar "$DIR2"  # Unpack .rar archives
-unzip "$DIR1"/*.zip -d "$DIR2"  # Unpack .zip archives
+for password in $PASSWORDS; do
+	unrar x -o -p"$password" -y "$DIR1"/*.rar "$DIR2"  # Unpack .rar archives with password
+done
+echo -e "${GREEN}Unpacking rar complete to ${YELLOW}$DIR2${NC}"
 
-echo -e "${GREEN}Unpacking complete to ${YELLOW} $DIR2 ${NC}"
+
+for password in $PASSWORDS; do
+	echo "$password"
+	unzip -o -P "$password" "$DIR1"/*.zip -d "$DIR2"  # Unpack .zip archives with password
+done
+echo -e "${GREEN}Unpacking zip complete to ${YELLOW}$DIR2${NC}"
+
+
 
 # Create a temporary directory to move unnecessary files
 TMP_DIR="$DIR1/tmp"

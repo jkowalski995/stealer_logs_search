@@ -1,7 +1,13 @@
-dir1: /path/to/archive # location of the archive file and for tmp dir
-dir2: /path/to/unpacked # location of uncpacked files
-dir3: /path/to/rg/results # location for results of search
+# location of the archive file and for tmp dir
+dir1: /path/to/archive
+# location of uncpacked files
+dir2: /path/to/unpacked 
+# location for results of search
+dir3: /path/to/rg/results
 
 phrases: # add as many as want
   - phrase1
   - phrase2
+  - phrase3
+
+
