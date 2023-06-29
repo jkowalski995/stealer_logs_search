@@ -1,7 +1,7 @@
 # location of the archive file and for tmp dir
 dir1: /path/to/archive
 # location of uncpacked files
-dir2: /path/to/unpacked 
+dir2: /path/to/unpacked/
 # location for results of search
 dir3: /path/to/rg/results
 

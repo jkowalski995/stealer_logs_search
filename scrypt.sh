@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#set -x
 # Color codes definition
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -28,21 +28,79 @@ echo -e "${GREEN}Config loaded${NC}"
 # Load passwords list
 PASSWORDS_FILE="passwords.yaml"
 PASSWORDS=$(awk '/passwords:/ {flag=1; next} /- / {print}' "$PASSWORDS_FILE")
-
 echo -e "${GREEN}Passwords loaded${NC}"
 
 # Unpack archive from dir1 to dir2
 mkdir -p "$DIR2"
-for password in $PASSWORDS; do
-	unrar x -o -p"$password" -y "$DIR1"/*.rar "$DIR2"  # Unpack .rar archives with password
+#for password in $PASSWORDS; do
+#	unrar x -o -p"$password" -y "$DIR1"/*.rar "$DIR2"  # Unpack .rar archives with password
+#done
+
+for archive_file in "$DIR1"/*.rar; do
+	file_name=$(basename "$archive_file" .rar) # Extract the base name of the archive file without the extension
+	for password in "${PASSWORDS[@]}"; do
+		#echo "$password"
+		if unrar t -p"$password" "$archive_file" >/dev/null 2>&1; then
+			directory_name="$DIR2/$file_name"
+			mkdir -p "$directory_name"
+			unrar x -y -o -p"$password" "$archive_file" "$directory_name"
+			break
+		fi
+	done
 done
+
+
 echo -e "${GREEN}Unpacking rar complete to ${YELLOW}$DIR2${NC}"
 
 
-for password in $PASSWORDS; do
-	echo "$password"
-	unzip -o -P "$password" "$DIR1"/*.zip -d "$DIR2"  # Unpack .zip archives with password
+#for password in $PASSWORDS; do
+#	unzip -o -P "$password" "$DIR1"/*.zip -d "$DIR2"  # Unpack .zip archives with password
+#done
+
+#for archive_file in "$DIR1"/*.zip; do
+#	file_name=$(basename "$archive_file" .rar) # Extract the base name of the archive file without the extension
+#	for password in "${PASSWORDS[@]}"; do
+#		echo "for"
+#		echo "$password"
+#		unzip -t -P "$password" "$archive_file" 
+#		if unzip -t -P "$password" "$archive_file" >/dev/null 2>&1; then
+#			echo "if"
+#			directory_name="$DIR2/$file_name"
+#			mkdir -p "$directory_name"
+#			unzip -o -P "$password" "$archive_file" -d "$directory_name"
+#			break
+#		fi
+#	done
+#done
+#PASSWORDS=("123" "log" "xls" "zip" "qwe")
+
+# Read YAML file and extract values to an array
+#passwords=($(yq eval '.passwords[]' passwords.yaml))
+#passwords=($(yq eval '.passwords | .[]' passwords.yaml))
+mapfile -t PASSWORDS < <(echo -e "$PASSWORDS" | sed 's/^[[:space:]]*-\s*//') # Parse PASSWORDS into array for 7zip
+# Print each value in the array
+#for password in "${PASSWORDS[@]}"; do
+#  echo "${RED}$password${NC}"
+#done
+
+
+for archive_file in "$DIR1"/*.zip; do
+	file_name=$(basename "$archive_file" .zip) # Extract the base name of the archive file without the extension
+	#echo "$PASSWORDS"
+	for password in "${PASSWORDS[@]}"; do
+		#echo "$password"
+		7z t -p"$password" "$archive_file"
+		if 7z t -p"$password" "$archive_file" >/dev/null 2>&1; then
+			directory_name="$DIR2/$file_name"
+			mkdir -p "$directory_name"
+			7z x -y -p"$password" "$archive_file" -o"$directory_name"
+			break
+		fi
+	done
 done
+
+
+
 echo -e "${GREEN}Unpacking zip complete to ${YELLOW}$DIR2${NC}"
 
 
