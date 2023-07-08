@@ -2,6 +2,6 @@
 
 awk
 unrar
-unzip
 find
 rg
+7z
