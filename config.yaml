@@ -6,8 +6,8 @@ dir2: /home/jakub-kali/Pulpit/logi_do_testow/wypakowane
 dir3: /home/jakub-kali/Pulpit/logi_do_testow/results 
 
 phrases: # add as many as want
-  - atos
-  - elopak
-  - paris2024
+  - phrase1
+  - phrase2
+  - phrase3
 
 
