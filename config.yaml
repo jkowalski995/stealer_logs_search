@@ -1,13 +1,10 @@
 # location of the archive file and for tmp dir
-dir1: /home/jakub-kali/Pulpit/logi_do_testow 
+dir1: /path/to/archive
 # location of uncpacked files
-dir2: /home/jakub-kali/Pulpit/logi_do_testow/wypakowane 
+dir2: /path/to/unpack 
 # location for results of search
-dir3: /home/jakub-kali/Pulpit/logi_do_testow/results 
+dir3: /path/to/rg/results 
 
-phrases: # add as many as want
-  - phrase1
-  - phrase2
-  - phrase3
+phrases: phrase_1|phrase_2|phrase_3 # add as many as want and separate each with |
 
 

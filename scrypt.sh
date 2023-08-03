@@ -14,12 +14,18 @@ NC='\033[0m' # No color
 
 echo -e "${RED}This message is only an informational reminder that to work properly, the script needs proper permissions. So if any error occurs, first execute 'chmod +<missing_permissions> script.sh'${NC}"
 
+echo -e "${RED}Already script handles single part archives and additionally unpack the rar parts that do not require password. The concept for testing passwords for part archives is more complicated.${NC}"
+
 # Load configuration from YAML file
 CONFIG_FILE="config.yaml"
 DIR1=$(awk '/dir1/ {print $2}' "$CONFIG_FILE")
 DIR2=$(awk '/dir2/ {print $2}' "$CONFIG_FILE")
 DIR3=$(awk '/dir3/ {print $2}' "$CONFIG_FILE")
-PHRASES=$(awk '/phrases:/ {flag=1; next} /- phrase:/ {flag=0} flag {print}' "$CONFIG_FILE")
+#PHRASES=$(awk '/phrases:/ {flag=1; next} /- phrase:/ {flag=0} flag {print}' "$CONFIG_FILE")
+PHRASES=$(awk '/phrases:/ {print $2}' "$CONFIG_FILE")
+
+# Print the result
+echo -e "${GREEN}Loaded phrases: ${YELLOW}$PHRASES${NC}"
 
 echo -e "${GREEN}Config loaded${NC}"
 
@@ -47,13 +53,10 @@ for archive_file in "$DIR1"/*.rar; do
 	done
 done
 
-
 echo -e "${GREEN}Unpacking rar complete to ${YELLOW}$DIR2${NC}"
 
 # Read YAML file and extract values to an array
 mapfile -t PASSWORDS < <(echo -e "$PASSWORDS" | sed 's/^[[:space:]]*-\s*//') # Parse PASSWORDS into array for 7zip
-
-
 
 for archive_file in "$DIR1"/*.zip; do
 	file_name=$(basename "$archive_file" .zip) # Extract the base name of the archive file without the extension
@@ -89,8 +92,6 @@ done
 
 echo -e "${GREEN}Unpacking 7z complete to ${YELLOW}$DIR2${NC}"
 
-
-
 # Create a temporary directory to move unnecessary files
 TMP_DIR="$DIR1/tmp"
 mkdir -p "$TMP_DIR"
@@ -104,9 +105,12 @@ echo -e "${GREEN}Unnecessary files moved to ${YELLOW} $TMP_DIR ${NC}"
 
 # Search for phrases in dir2 using rg and save results to dir3
 mkdir -p "$DIR3"
-for phrase in $PHRASES; do
-    rg -A 2 -B 2 "$phrase" "$DIR2" > "$DIR3/$phrase.txt"
-done
+
+#for phrase in $PHRASES; do
+    #rg -A 2 -B 2 "$phrase" "$DIR2" > "$DIR3/$phrase.txt"
+#done
+
+echo "$PHRASES" | rg -A 2 -B 2 -f - "$DIR2" > "$DIR3/results.txt" # [-f -] -> its for performing rg with pattern from echo
 
 echo -e "${GREEN}rg search done. Results saved in ${YELLOW} $DIR3 ${NC}"
 echo -e "${RED}Exit${NC}"
